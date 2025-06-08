@@ -13,8 +13,6 @@ export type Database = {
           id: string
           booking_id: string
           phone: string
-          name: string
-          email: string
           from_city: string
           to_city: string | null
           pickup_date: string
@@ -31,8 +29,6 @@ export type Database = {
           id?: string
           booking_id: string
           phone: string
-          name: string
-          email: string
           from_city: string
           to_city?: string | null
           pickup_date: string
@@ -49,8 +45,6 @@ export type Database = {
           id?: string
           booking_id?: string
           phone?: string
-          name?: string
-          email?: string
           from_city?: string
           to_city?: string | null
           pickup_date?: string

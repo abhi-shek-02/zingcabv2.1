@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Calendar, Car, Users, ArrowRight, Clock, Phone, User, Mail } from 'lucide-react';
+import { MapPin, Calendar, Car, ArrowRight, Clock, Phone } from 'lucide-react';
 import Modal from './Modal';
 import { supabase } from '../lib/supabase';
 
 const BookingForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
     phone: '',
     fromCity: '',
     toCity: '',
@@ -26,11 +24,11 @@ const BookingForm = () => {
   });
 
   const carTypes = [
-    { id: 'hatchback', name: 'Hatchback', seats: '4 Seater', example: 'Wagon R', icon: Car },
-    { id: 'sedan', name: 'Sedan', seats: '4 Seater', example: 'Maruti Dzire', icon: Car },
-    { id: 'suv', name: 'SUV', seats: '6-7 Seater', example: 'Ertiga', icon: Car },
-    { id: 'crysta', name: 'Crysta', seats: '7 Seater', example: 'Toyota Innova Crysta', icon: Car },
-    { id: 'scorpio', name: 'Scorpio', seats: '7 Seater', example: 'Mahindra Scorpio', icon: Car }
+    { id: 'hatchback', name: 'Hatchback', seats: '4 Seater', example: 'Wagon R' },
+    { id: 'sedan', name: 'Sedan', seats: '4 Seater', example: 'Maruti Dzire' },
+    { id: 'suv', name: 'SUV', seats: '6-7 Seater', example: 'Ertiga' },
+    { id: 'crysta', name: 'Crysta', seats: '7 Seater', example: 'Toyota Innova Crysta' },
+    { id: 'scorpio', name: 'Scorpio', seats: '7 Seater', example: 'Mahindra Scorpio' }
   ];
 
   const popularRoutes = [
@@ -89,16 +87,6 @@ const BookingForm = () => {
   };
 
   const validateForm = () => {
-    if (!formData.name.trim()) {
-      showModal('warning', 'Name Required', 'Please enter your full name.');
-      return false;
-    }
-
-    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
-      showModal('warning', 'Valid Email Required', 'Please enter a valid email address.');
-      return false;
-    }
-
     if (!validatePhone(formData.phone)) {
       showModal('warning', 'Valid Phone Required', 'Please enter a valid 10-digit Indian mobile number.');
       return false;
@@ -190,8 +178,6 @@ const BookingForm = () => {
       const bookingData = {
         booking_id: bookingId,
         phone: formData.phone,
-        name: formData.name,
-        email: formData.email,
         from_city: formData.fromCity,
         to_city: formData.tripType === 'local' ? null : formData.toCity,
         pickup_date: formData.date,
@@ -214,8 +200,6 @@ const BookingForm = () => {
       
       // Reset form
       setFormData({
-        name: '',
-        email: '',
         phone: '',
         fromCity: '',
         toCity: '',
@@ -253,20 +237,19 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Book Your Intercity Cab</h2>
+    <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 max-w-4xl mx-auto">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Book Your Intercity Cab</h2>
         <p className="text-gray-600">Quick, reliable, and affordable travel across West Bengal</p>
       </div>
 
       {/* Trip Type Selection */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Trip Type</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {tripTypes.map(type => (
             <div
               key={type.id}
-              className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
+              className={`p-3 border-2 rounded-lg cursor-pointer transition-all ${
                 formData.tripType === type.id
                   ? 'border-blue-500 bg-blue-50'
                   : 'border-gray-200 hover:border-blue-300'
@@ -274,7 +257,7 @@ const BookingForm = () => {
               onClick={() => handleTripTypeChange(type.id)}
             >
               <div className="text-center">
-                <h4 className="font-semibold text-gray-900 mb-1">{type.name}</h4>
+                <h4 className="font-semibold text-gray-900 text-sm mb-1">{type.name}</h4>
                 <p className="text-xs text-gray-600">{type.description}</p>
               </div>
             </div>
@@ -282,198 +265,159 @@ const BookingForm = () => {
         </div>
       </div>
 
-      {/* Personal Information */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Form Fields */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Phone Number */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-            <div className="relative">
-              <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Enter your full name"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-          <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="your.email@example.com"
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-          <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-            <div className="relative">
-              <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="9876543210"
-                maxLength={10}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+            <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              placeholder="9876543210"
+              maxLength={10}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
         </div>
-      </div>
 
-      {/* Travel Details */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Travel Details</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* From City / Pickup Location */}
+        {/* From City / Pickup Location */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {formData.tripType === 'local' ? 'Pickup Location' : 'From City'}
+          </label>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {formData.tripType === 'local' ? 'Pickup Location' : 'From City'}
-            </label>
+            <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+            <input
+              type="text"
+              name="fromCity"
+              value={formData.fromCity}
+              onChange={handleInputChange}
+              placeholder="Kolkata"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        {/* To City (hidden for local rental) */}
+        {formData.tripType !== 'local' && (
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">To City</label>
             <div className="relative">
               <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                name="fromCity"
-                value={formData.fromCity}
+                name="toCity"
+                value={formData.toCity}
                 onChange={handleInputChange}
-                placeholder="Kolkata"
+                placeholder="Durgapur"
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
+        )}
 
-          {/* To City (hidden for local rental) */}
-          {formData.tripType !== 'local' && (
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">To City</label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  name="toCity"
-                  value={formData.toCity}
-                  onChange={handleInputChange}
-                  placeholder="Durgapur"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Date */}
+        {/* Date */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {formData.tripType === 'local' ? 'Pickup Date' : 'Travel Date'}
+          </label>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {formData.tripType === 'local' ? 'Pickup Date' : 'Travel Date'}
-            </label>
+            <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleInputChange}
+              min={getTodayDate()}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        {/* Return Date (only for round trip) */}
+        {formData.tripType === 'roundtrip' && (
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Return Date</label>
             <div className="relative">
               <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <input
                 type="date"
-                name="date"
-                value={formData.date}
+                name="returnDate"
+                value={formData.returnDate}
                 onChange={handleInputChange}
-                min={getTodayDate()}
+                min={formData.date || getTodayDate()}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
+        )}
 
-          {/* Return Date (only for round trip) */}
-          {formData.tripType === 'roundtrip' && (
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Return Date</label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="date"
-                  name="returnDate"
-                  value={formData.returnDate}
-                  onChange={handleInputChange}
-                  min={formData.date || getTodayDate()}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Pickup Time */}
+        {/* Pickup Time */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Pickup Time</label>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Pickup Time</label>
-            <div className="relative">
-              <Clock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-              <input
-                type="time"
-                name="pickupTime"
-                value={formData.pickupTime}
-                onChange={handleInputChange}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+            <Clock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+            <input
+              type="time"
+              name="pickupTime"
+              value={formData.pickupTime}
+              onChange={handleInputChange}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
+        </div>
 
-          {/* Car Type */}
+        {/* Car Type */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Car Type</label>
           <div className="relative">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Car Type</label>
-            <div className="relative">
-              <Car className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-              <select
-                name="carType"
-                value={formData.carType}
-                onChange={handleInputChange}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
-              >
-                <option value="">Select Car</option>
-                {carTypes.map(car => (
-                  <option key={car.id} value={car.id}>
-                    {car.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Car className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+            <select
+              name="carType"
+              value={formData.carType}
+              onChange={handleInputChange}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
+            >
+              <option value="">Select Car</option>
+              {carTypes.map(car => (
+                <option key={car.id} value={car.id}>
+                  {car.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
 
       {/* Car Types Display */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Choose Your Vehicle</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-          {carTypes.map(car => (
-            <div
-              key={car.id}
-              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                formData.carType === car.id
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-blue-300'
-              }`}
-              onClick={() => setFormData(prev => ({ ...prev, carType: car.id }))}
-            >
-              <div className="flex items-center justify-center mb-2">
-                <car.icon className="h-8 w-8 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-center text-sm">{car.name}</h3>
-              <p className="text-xs text-gray-600 text-center">{car.seats}</p>
-              <p className="text-xs text-gray-500 text-center">{car.example}</p>
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+        {carTypes.map(car => (
+          <div
+            key={car.id}
+            className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+              formData.carType === car.id
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-200 hover:border-blue-300'
+            }`}
+            onClick={() => setFormData(prev => ({ ...prev, carType: car.id }))}
+          >
+            <div className="flex items-center justify-center mb-2">
+              <Car className="h-8 w-8 text-blue-600" />
             </div>
-          ))}
-        </div>
+            <h3 className="font-semibold text-center text-sm">{car.name}</h3>
+            <p className="text-xs text-gray-600 text-center">{car.seats}</p>
+            <p className="text-xs text-gray-500 text-center">{car.example}</p>
+          </div>
+        ))}
       </div>
 
       {/* Fare Estimate */}
       {estimatedFare && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-green-800">Estimated Fare</h3>
@@ -492,7 +436,7 @@ const BookingForm = () => {
       )}
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row gap-4">
         <button
           onClick={calculateFare}
           disabled={isLoading}
@@ -512,7 +456,7 @@ const BookingForm = () => {
 
       {/* Popular Routes (only for intercity trips) */}
       {formData.tripType !== 'local' && (
-        <div className="pt-6 border-t border-gray-200">
+        <div className="mt-8 pt-6 border-t border-gray-200">
           <h3 className="font-semibold text-gray-900 mb-4">Popular Routes</h3>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {popularRoutes.map((route, index) => (
