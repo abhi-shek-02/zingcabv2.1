@@ -255,14 +255,14 @@ const Home = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
-              href="https://wa.me/919876543210"
+              href="https://wa.me/917003371343"
               className="bg-green-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-200 flex items-center space-x-2"
             >
               <MessageCircle className="h-5 w-5" />
               <span>WhatsApp Booking</span>
             </a>
             <a
-              href="tel:+919876543210"
+              href="tel:7003371343"
               className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 flex items-center space-x-2"
             >
               <Phone className="h-5 w-5" />

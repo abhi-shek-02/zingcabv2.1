@@ -56,7 +56,7 @@ const Services = () => {
   const carTypes = [
     {
       name: 'Hatchback',
-      icon: '🚗',
+      icon: Car,
       seats: '4 Seater',
       luggage: '2 Bags',
       examples: 'Wagon R, Hyundai i20',
@@ -64,7 +64,7 @@ const Services = () => {
     },
     {
       name: 'Sedan',
-      icon: '🚙',
+      icon: Car,
       seats: '4 Seater',
       luggage: '3 Bags',
       examples: 'Maruti Dzire, Honda Amaze',
@@ -72,7 +72,7 @@ const Services = () => {
     },
     {
       name: 'SUV',
-      icon: '🚐',
+      icon: Car,
       seats: '6-7 Seater',
       luggage: '5 Bags',
       examples: 'Ertiga, Tata Safari',
@@ -155,7 +155,9 @@ const Services = () => {
             {carTypes.map((car, index) => (
               <div key={index} className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover:-translate-y-1">
                 <div className="p-6">
-                  <div className="text-4xl mb-4 text-center">{car.icon}</div>
+                  <div className="flex items-center justify-center mb-4">
+                    <car.icon className="h-12 w-12 text-blue-600" />
+                  </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">{car.name}</h3>
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between text-sm">
